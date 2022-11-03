@@ -1,0 +1,87 @@
+﻿@page
+@model QLTV_TKPM.Pages.Phieumuonsachs.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Phieumuonchitiet</h4>
+<hr />
+<div class=" container p-3">
+    <div class="col">    
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="row pt-3">
+                <div class="col-8">                
+                        <div class="form-group row">
+
+                            <div class="col-md-2">
+                                <label  asp-for="Phieumuonsachs.MaDocGia">Tên độc giả</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="hidden" asp-for="Maphieumuonsach" />
+                                <input  asp-for="Madocgia"  placeholder="Nhập mã độc giả" list="Madocgias"/>
+                                <datalist id="Madocgias">
+                                    
+                                        @foreach (var docgia in Model.docgias)
+                                        {
+                                            <option value="@docgia.Id-@docgia.Hoten"></option>
+                                        }                                    
+                                </datalist>
+                            </div> 
+                            <span asp-validation-for="Phieumuonsachs.MaDocGia" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Ngaymuon" class="control-label"></label>
+                        <input asp-for="Ngaymuon" class="form-control" />
+                        <span asp-validation-for="Ngaymuon" class="text-danger"></span>
+                    </div>
+                                        
+                </div>
+                @for(int i =0; i< Model.Masach.Count ; i++)
+                {
+                    <div class="row pt-3">
+                    <div class="col-8">                
+                        <div class="form-group row">
+
+                            <div class="col-md-2">
+                                <label asp-for="Masach[i]" >Tên sách </label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="hidden" asp-for="Maphieumuonchitiet[i]" />
+                                <input  asp-for="Masach[i]" list="Sach"/>
+                                <datalist id="Sach">
+                                    @if(Model.sachs.Count!=0)
+                                    {
+                                        foreach (var sach in Model.sachs)
+                                        {
+                                            <option value="@sach.Id-@sach.Tensach"></option>
+                                        }                                        
+                                    }                                    
+                                </datalist>
+                            </div>                            
+                        </div>
+                    </div>
+                                        
+                </div>
+                }
+                
+                <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
