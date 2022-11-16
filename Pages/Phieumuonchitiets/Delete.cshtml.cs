@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using QLTV_TKPM.Data;
 using QLTV_TKPM.Models;
 
-namespace QLTV_TKPM.Pages.Docgias
+namespace QLTV_TKPM.Pages.Phieumuonchitiets
 {
     public class DeleteModel : PageModel
     {
@@ -20,47 +20,40 @@ namespace QLTV_TKPM.Pages.Docgias
         }
 
         [BindProperty]
-      public Docgia Docgia { get; set; }
-        public Loaidocgia Loaidocgia { get; set; } = default!;
-
+      public Phieumuonchitiet Phieumuonchitiet { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            
-            if (id == null || _context.Docgia == null)
+            if (id == null || _context.Phieumuonchitiet == null)
             {
                 return NotFound();
             }
 
-            var docgia = await _context.Docgia.FirstOrDefaultAsync(m => m.Id == id);
+            var phieumuonchitiet = await _context.Phieumuonchitiet.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (docgia == null)
+            if (phieumuonchitiet == null)
             {
                 return NotFound();
             }
             else 
             {
-                Docgia = docgia;
-                if (_context.Loaidocgia != null)
-                {
-                    Loaidocgia = await _context.Loaidocgia.FirstOrDefaultAsync(m => m.Id == Docgia.LoaiDocGia);
-                }
+                Phieumuonchitiet = phieumuonchitiet;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Docgia == null)
+            if (id == null || _context.Phieumuonchitiet == null)
             {
                 return NotFound();
             }
-            var docgia = await _context.Docgia.FindAsync(id);
+            var phieumuonchitiet = await _context.Phieumuonchitiet.FindAsync(id);
 
-            if (docgia != null)
+            if (phieumuonchitiet != null)
             {
-                Docgia = docgia;
-                _context.Docgia.Remove(Docgia);
+                Phieumuonchitiet = phieumuonchitiet;
+                _context.Phieumuonchitiet.Remove(Phieumuonchitiet);
                 await _context.SaveChangesAsync();
             }
 

@@ -7,7 +7,8 @@
 
 <h1>Edit</h1>
 
-<h4>Phieumuonchitiet</h4>
+<h4>Phiếu mượn sách</h4>
+<h2 class="py-3 text-danger">@Model.errorMessage</h2>
 <hr />
 <div class=" container p-3">
     <div class="col">    
@@ -15,15 +16,18 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <div class="row pt-3">
-                <div class="col-8">                
+                <div class="col-8">  
+                    <div class="row">
+                        <div class="col-6">
+                             </div>
                         <div class="form-group row">
 
                             <div class="col-md-2">
-                                <label  asp-for="Phieumuonsachs.MaDocGia">Tên độc giả</label>
+                                <label  asp-for="phieumuonsaches.MaDocGia">Tên độc giả</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="hidden" asp-for="Maphieumuonsach" />
-                                <input  asp-for="Madocgia"  placeholder="Nhập mã độc giả" list="Madocgias"/>
+                                <input type="hidden" asp-for="phieumuonsaches.Id" />
+                                <input  asp-for="phieumuonsaches.MaDocGia"  placeholder="Nhập mã độc giả" list="Madocgias"/>
                                 <datalist id="Madocgias">
                                     
                                         @foreach (var docgia in Model.docgias)
@@ -32,30 +36,38 @@
                                         }                                    
                                 </datalist>
                             </div> 
-                            <span asp-validation-for="Phieumuonsachs.MaDocGia" class="text-danger"></span>
+                            <span asp-validation-for="phieumuonsaches.MaDocGia" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Ngaymuon" class="control-label"></label>
-                        <input asp-for="Ngaymuon" class="form-control" />
-                        <span asp-validation-for="Ngaymuon" class="text-danger"></span>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                        <label asp-for="phieumuonsaches.NgayMuon" class="control-label"></label>
+                        <input asp-for="phieumuonsaches.NgayMuon" class="form-control" />
+                        <span asp-validation-for="phieumuonsaches.NgayMuon" class="text-danger"></span>
                     </div>
+                        </div>
+
+                   
+                    
                                         
                 </div>
-                @for(int i =0; i< Model.Masach.Count ; i++)
+
+
+                @for(int i = 0; i< Model.Phieumuonchitiets.Count ; i++)
                 {
                     <div class="row pt-3">
                     <div class="col-8">                
                         <div class="form-group row">
 
                             <div class="col-md-2">
-                                <label asp-for="Masach[i]" >Tên sách </label>
+                                <label asp-for="Phieumuonchitiets[i]" >Tên sách </label>
                             </div>
                             <div class="col-md-4">
-                                <input type="hidden" asp-for="Maphieumuonchitiet[i]" />
-                                <input  asp-for="Masach[i]" list="Sach"/>
+                                <input type="hidden" asp-for="Phieumuonchitiets[i].Id" />
+                                <input  asp-for="Phieumuonchitiets[i].MaSach" list="Sach"/>
                                 <datalist id="Sach">
-                                    @if(Model.sachs.Count!=0)
+                                    @if(Model.sachs.Count != 0)
                                     {
                                         foreach (var sach in Model.sachs)
                                         {
@@ -63,7 +75,8 @@
                                         }                                        
                                     }                                    
                                 </datalist>
-                            </div>                            
+                            </div>
+                            <span asp-validation-for="Phieumuonchitiets[i].MaSach" class="text-danger"></span>
                         </div>
                     </div>
                                         

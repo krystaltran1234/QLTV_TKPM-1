@@ -18,16 +18,13 @@ namespace QLTV_TKPM.Pages.Sachs
         {
             _context = context;
         }
-        public IList<Theloaisach> Theloaisach { get; set; } = default!;
+        public Theloaisach Theloaisach { get; set; } = default!;
 
         public Sach Sach { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (_context.Theloaisach != null)
-            {
-                Theloaisach = await _context.Theloaisach.ToListAsync();
-            }
+            
             if (id == null || _context.Sach == null)
             {
                 return NotFound();
@@ -41,6 +38,10 @@ namespace QLTV_TKPM.Pages.Sachs
             else 
             {
                 Sach = sach;
+                if (_context.Theloaisach != null)
+                {
+                    Theloaisach = await _context.Theloaisach.FirstOrDefaultAsync(m => m.Id == Sach.Theloaisach);
+                }
             }
             return Page();
         }

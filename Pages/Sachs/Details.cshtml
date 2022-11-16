@@ -21,7 +21,10 @@
             @Html.DisplayNameFor(model => model.Sach.Theloaisach)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Sach.Theloaisach)
+           @if (Model.Theloaisach != null)
+            {
+                @Model.Theloaisach.Tentheloaisach;
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Sach.Tacgia)

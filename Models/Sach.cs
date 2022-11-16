@@ -38,6 +38,9 @@ namespace QLTV_TKPM.Models
         [Required]
         public DateTime Ngaynhap { get; set; }
 
+        [Display(Name = "Tình trạng")]
+        public string Tinhtrang { get; set; } = "Chưa mượn";
+
         public bool? Daxoa { get; set; } = false;
         
     }

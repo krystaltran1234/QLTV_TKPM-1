@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using QLTV_TKPM.Data;
 using QLTV_TKPM.Models;
 
-namespace QLTV_TKPM.Pages.Sachs
+namespace QLTV_TKPM.Pages.Namxuatbans
 {
     public class EditModel : PageModel
     {
@@ -21,28 +21,21 @@ namespace QLTV_TKPM.Pages.Sachs
         }
 
         [BindProperty]
-        public Sach Sach { get; set; } = default!;
-        public IList<Theloaisach> Theloaisach { get; set; } = default!;
-        public string errorMessage { get; set; } = "";
-
+        public Namxuatban Namxuatban { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (_context.Theloaisach != null)
-            {
-                Theloaisach = await _context.Theloaisach.ToListAsync();
-            }
-            if (id == null || _context.Sach == null)
+            if (id == null || _context.Namxuatban == null)
             {
                 return NotFound();
             }
 
-            var sach =  await _context.Sach.FirstOrDefaultAsync(m => m.Id == id);
-            if (sach == null)
+            var namxuatban =  await _context.Namxuatban.FirstOrDefaultAsync(m => m.Id == id);
+            if (namxuatban == null)
             {
                 return NotFound();
             }
-            Sach = sach;
+            Namxuatban = namxuatban;
             return Page();
         }
 
@@ -54,21 +47,8 @@ namespace QLTV_TKPM.Pages.Sachs
             {
                 return Page();
             }
-            if (_context.Namxuatban != null)
-            {
-                var namxuatban = await _context.Namxuatban.ToListAsync();
-                if (namxuatban.Count > 0)
-                {
-                    if (DateTime.Today.Year - Sach.NamXb >= namxuatban[0].Namxuatbang)
-                    {
-                        errorMessage = "Sách quá hạn quy định";
-                        RedirectToPage($"./Edit/");
-                    }
 
-                }
-            }
-
-            _context.Attach(Sach).State = EntityState.Modified;
+            _context.Attach(Namxuatban).State = EntityState.Modified;
 
             try
             {
@@ -76,7 +56,7 @@ namespace QLTV_TKPM.Pages.Sachs
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SachExists(Sach.Id))
+                if (!NamxuatbanExists(Namxuatban.Id))
                 {
                     return NotFound();
                 }
@@ -89,9 +69,9 @@ namespace QLTV_TKPM.Pages.Sachs
             return RedirectToPage("./Index");
         }
 
-        private bool SachExists(int id)
+        private bool NamxuatbanExists(int id)
         {
-          return _context.Sach.Any(e => e.Id == id);
+          return _context.Namxuatban.Any(e => e.Id == id);
         }
     }
 }

@@ -20,8 +20,7 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
         {
             _context = context;
         }
-        public Docgia docgia { get; set; }
-               
+        public Docgia docgia { get; set; }               
 
         public int Soluongsachmuon { get; set; }
         
@@ -43,10 +42,9 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
         [BindProperty]
         public IList<string> Masach { get; set; }
 
+        public Phieumuonsach phieumuonsachs { get; set; }
 
-
-        public Phieumuonsach Phieumuonsachs { get; set; }
-
+        public string errorMessage { get; set; } = "";
 
         public IList<Phieumuonchitiet> Phieumuonchitiets { get; set; }
 
@@ -69,7 +67,7 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
             }
             if(_context.Sach != null)
             {
-                sachs = await _context.Sach.ToListAsync();
+                sachs = await _context.Sach.Where(m => m.Tinhtrang == "Chưa mượn").ToListAsync();
             }
             if (_context.Docgia != null)
             {
@@ -102,22 +100,50 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
             if(!checkMasach())
             {
 
-                return null;
+                return RedirectToPage("./Create");
             }    
 
               if (!ModelState.IsValid )
               {
                     return Page();
               }
+
+
             //Phieumuonsachs.MaDocGia = int.Parse(Phieumuonsachs.Docgias.Hoten.Split('-')[0]);
-            Phieumuonsachs = new Phieumuonsach();
+            phieumuonsachs = new Phieumuonsach();
             Phieumuonchitiets = new List<Phieumuonchitiet>();
-            Phieumuonsachs.MaDocGia = int.Parse(Madocgia.Split('-')[0]);
-            Phieumuonsachs.NgayMuon = Ngaymuon;
-            _context.Phieumuonsach.Add(Phieumuonsachs);
+            phieumuonsachs.MaDocGia = int.Parse(Madocgia.Split('-')[0]);
+            if (_context.Docgia != null)
+            {
+                var docgias = await _context.Docgia.FirstOrDefaultAsync(m => m.Id == phieumuonsachs.MaDocGia);
+                if (docgias.Ngaylapthe.Year - Ngaymuon.Year > 0)
+                {
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    if (_context.Thoihanthe != null)
+                    {
+                        var thoihanthe = await _context.Thoihanthe.ToListAsync();
+                        if(thoihanthe.Count>0)
+                        {
+                            if (docgias.Ngaylapthe.Month - Ngaymuon.Month > thoihanthe[0].Sothang)
+                            {
+                                errorMessage = "Thẻ đã quá hạn.";
+                                return RedirectToPage("./Index");
+                            }    
+
+                        }    
+                    }
+                    
+                }
+
+            }
+            phieumuonsachs.NgayMuon = Ngaymuon;
+            _context.Phieumuonsach.Add(phieumuonsachs);
             await _context.SaveChangesAsync();
             int j = 0;
-            int Maphieumuon = Phieumuonsachs.Id;
+            int Maphieumuon = phieumuonsachs.Id;
             Phieumuonchitiet phieumuonchitiet;
             for(int i=0; i<Masach.Count; i++)
             {
@@ -131,6 +157,11 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
                 }    
             }
             await _context.SaveChangesAsync();
+            for(int i = 0; i < Masach.Count; i++)
+            {
+                int masach = int.Parse(Masach[i].Split('-')[0]);
+                await _context.Sach.FromSqlRaw($"UPDATE Sach SET Tinhtrang = 'Đã mượn' WHERE Id =  {masach} ").ToListAsync();
+            }    
         
 
            //_context.Phieumuonchitiet.Add(1);

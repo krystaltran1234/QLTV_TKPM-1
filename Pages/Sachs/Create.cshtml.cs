@@ -21,7 +21,10 @@ namespace QLTV_TKPM.Pages.Sachs
         }
         public IList<Theloaisach> Theloaisach { get; set; } = default!;
 
+        public string errorMessage { get; set; } = "";
+
         
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -45,6 +48,20 @@ namespace QLTV_TKPM.Pages.Sachs
             {
                 return Page();
             }
+
+          if(_context.Namxuatban != null)
+            {
+                var namxuatban = await _context.Namxuatban.ToListAsync();
+                if (namxuatban.Count > 0)
+                {
+                    if (  DateTime.Today.Year - Sach.NamXb >= namxuatban[0].Namxuatbang)
+                    {
+                        errorMessage = "Sách quá hạn quy định";
+                        RedirectToPage("./Create");
+                    }    
+                    
+                }
+            }    
 
             _context.Sach.Add(Sach);
             await _context.SaveChangesAsync();

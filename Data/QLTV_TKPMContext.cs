@@ -25,10 +25,6 @@ namespace QLTV_TKPM.Data
 
         public DbSet<QLTV_TKPM.Models.Sach> Sach { get; set; }
 
-        //public DbSet<QLTV_TKPM.Models.Phieumuonchitiet> Phieumuonchitiet { get; set; }
-
-        //public DbSet<QLTV_TKPM.Models.Phieumuonsach> Phieumuonsach { get; set; }
-
         public DbSet<QLTV_TKPM.Models.Tuoidocgia> Tuoidocgia { get; set; }
 
         public DbSet<QLTV_TKPM.Models.Soluongsachmuon> Soluongsachmuon { get; set; }
@@ -37,6 +33,6 @@ namespace QLTV_TKPM.Data
 
         public DbSet<QLTV_TKPM.Models.Phieumuonchitiet> Phieumuonchitiet { get; set; }
 
-        //public DbSet<QLTV_TKPM.Models.Phieumuonchitiet> Phieumuonchitiet { get; set; }
+        public DbSet<QLTV_TKPM.Models.Namxuatban> Namxuatban { get; set; }
     }
 }

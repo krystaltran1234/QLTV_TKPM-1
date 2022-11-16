@@ -14,7 +14,7 @@ namespace QLTV_TKPM.Models
         [Key]
         public int Id { get; set; }
 
-        [Display(Name = "Mã độc giả")]
+        [Display(Name = "Tên độc giả")]
 
         [ForeignKey("Docgia")]
         [Required]

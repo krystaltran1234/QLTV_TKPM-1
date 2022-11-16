@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using QLTV_TKPM.Data;
 using QLTV_TKPM.Models;
 
-namespace QLTV_TKPM.Pages.Soluongsachmuons
+namespace QLTV_TKPM.Pages.Namxuatbans
 {
     public class CreateModel : PageModel
     {
@@ -25,7 +25,7 @@ namespace QLTV_TKPM.Pages.Soluongsachmuons
         }
 
         [BindProperty]
-        public Soluongsachmuon Soluongsachmuon { get; set; }
+        public Namxuatban Namxuatban { get; set; }
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -33,11 +33,10 @@ namespace QLTV_TKPM.Pages.Soluongsachmuons
         {
           if (!ModelState.IsValid)
             {
-                return this.Page();
+                return Page();
             }
 
-
-            _context.Soluongsachmuon.Add(Soluongsachmuon);
+            _context.Namxuatban.Add(Namxuatban);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

@@ -39,7 +39,11 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
         [BindProperty]
         public IList<string> Masach { get; set; }
 
+        [BindProperty]
         public IList<Phieumuonchitiet> Phieumuonchitiets { get; set; }
+
+        [BindProperty]
+        public Phieumuonsach phieumuonsaches { get; set; }
 
         [BindProperty]
         public IList<int> Maphieumuonchitiet { get; set; }
@@ -47,12 +51,11 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
         public IList<Docgia> docgias { get; set; }
 
         
-        public Phieumuonsach Phieumuonsachs { get; set; }
         public IList<Sach> sachs { get; set; }
 
-        
-            
-            
+        public string errorMessage { get; set; } = "";
+
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -79,26 +82,33 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
             {
                 return NotFound();
             }
-            
-            var phieumuonsach = await _context.Phieumuonsach.FirstOrDefaultAsync(m => m.Id == id);
-            Madocgia = phieumuonsach.MaDocGia.ToString() + "-";
-            Ngaymuon = phieumuonsach.NgayMuon;
-            Maphieumuonsach = phieumuonsach.Id;
-            int maphieumuonsach = phieumuonsach.Id;
-            
-            
-            if (phieumuonsach != null)
+            if(_context.Phieumuonsach != null)
             {
-                Masach = new List<string>();
-                var phieumuonchitiet = await _context.Phieumuonchitiet.Where(m => m.Maphieumuonsach == maphieumuonsach).ToListAsync();
-                for (int i=0; i<phieumuonchitiet.Count; i++)
+                phieumuonsaches = await _context.Phieumuonsach.FirstOrDefaultAsync(m => m.Id == id);
+                if(phieumuonsaches != null && _context.Phieumuonchitiet != null)
                 {
-
-                    Masach.Add(phieumuonchitiet[i].MaSach.ToString() + "-");
-                    Maphieumuonchitiet.Add(phieumuonchitiet[i].Id);
+                    Phieumuonchitiets = await _context.Phieumuonchitiet.Where(m => m.Maphieumuonsach == phieumuonsaches.Id).ToListAsync();
                 }    
+            } 
                 
-            }
+            //var phieumuonsach = await _context.Phieumuonsach.FirstOrDefaultAsync(m => m.Id == id);
+            //Madocgia = phieumuonsach.MaDocGia.ToString() + "-";
+            //Ngaymuon = phieumuonsach.NgayMuon;
+            //Maphieumuonsach = phieumuonsach.Id;
+            //int maphieumuonsach = phieumuonsach.Id;            
+            
+            //if (phieumuonsach != null)
+            //{
+            //    Masach = new List<string>();
+            //    var phieumuonchitiet = await _context.Phieumuonchitiet.Where(m => m.Maphieumuonsach == maphieumuonsach).ToListAsync();
+            //    for (int i=0; i<phieumuonchitiet.Count; i++)
+            //    {
+
+            //        Masach.Add(phieumuonchitiet[i].MaSach.ToString() + "-");
+            //        Maphieumuonchitiet.Add(phieumuonchitiet[i].Id);
+            //    }    
+                
+            //}
             
             return Page();
         }
@@ -107,44 +117,68 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            Phieumuonsachs = new Phieumuonsach();
+            
             
             if (!checkMasach())
             {
-                return Page();
+                
+                return RedirectToPage($"./Index/{phieumuonsaches.Id}");
             }
 
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-            Phieumuonsachs.Id = Maphieumuonsach;
-            Phieumuonsachs.MaDocGia = int.Parse(Madocgia.Split('-')[0]);
-            Phieumuonsachs.NgayMuon = Ngaymuon;
 
-            _context.Attach(Phieumuonsachs).State = EntityState.Modified;
+            
+            if (_context.Docgia != null)
+            {
+                var docgias = await _context.Docgia.FirstOrDefaultAsync(m => m.Id == phieumuonsaches.MaDocGia);
+                if (docgias.Ngaylapthe.Year - Ngaymuon.Year > 0)
+                {
+                    return Page();
+                }
+                else
+                {
+                    if (_context.Thoihanthe != null)
+                    {
+                        var thoihanthe = await _context.Thoihanthe.ToListAsync();
+                        if (thoihanthe.Count > 0)
+                        {
+                            if (docgias.Ngaylapthe.Month - Ngaymuon.Month > thoihanthe[0].Sothang)
+                            {
+                                errorMessage = "Thẻ đã quá hạn.";
+                                return Page();
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+            _context.Attach(phieumuonsaches).State = EntityState.Modified;
             
                 
             try
             {
                 await _context.SaveChangesAsync();
 
-                int i = 0;
-                foreach (var item in Maphieumuonchitiet)
+                foreach (var item in Phieumuonchitiets)
                 {
 
-                    Phieumuonchitiet phieumuonchitiet = new Phieumuonchitiet();
-                    phieumuonchitiet.MaSach = int.Parse(Masach[i].Split('-')[0]);
-                    phieumuonchitiet.Id = Maphieumuonchitiet[i];
-                    phieumuonchitiet.Maphieumuonsach = Maphieumuonsach;
-                    _context.Attach(phieumuonchitiet).State = EntityState.Modified;
-                    i++;
+                    //Phieumuonchitiet phieumuonchitiet = new Phieumuonchitiet();
+                    //phieumuonchitiet.MaSach = int.Parse(Masach[i].Split('-')[0]);
+                    //phieumuonchitiet.Id = Maphieumuonchitiet[i];
+                    //phieumuonchitiet.Maphieumuonsach = Maphieumuonsach;
+                    _context.Attach(item).State = EntityState.Modified;
+                    
                 }
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PhieumuonchitietExists(Phieumuonsachs.Id))
+                if (!PhieumuonchitietExists(phieumuonsaches.Id))
                 {
                     return NotFound();
                 }

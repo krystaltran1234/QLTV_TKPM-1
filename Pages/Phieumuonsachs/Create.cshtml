@@ -9,6 +9,7 @@
 
 <h1>Create</h1>
 <h4>Phieumuonchitiet</h4>
+<h2 class="py-3 text-danger">@Model.errorMessage</h2>
 <hr />
 <div class=" container p-3">
     <div class="col">    
@@ -20,7 +21,7 @@
                         <div class="form-group row">
 
                             <div class="col-md-2">
-                                <label  asp-for="Phieumuonsachs.MaDocGia">Tên độc giả</label>
+                                <label  asp-for="phieumuonsachs.MaDocGia">Tên độc giả</label>
                             </div>
                             <div class="col-md-6">
                             <input  asp-for="Madocgia"  placeholder="Nhập mã độc giả" type="text" list="Madocgias"/>
@@ -34,7 +35,7 @@
                                     }                                    
                                 </datalist>
                             </div> 
-                            <span asp-validation-for="Phieumuonsachs.MaDocGia" class="text-danger"></span>
+                            <span asp-validation-for="phieumuonsachs.MaDocGia" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -73,11 +74,7 @@
                     </div>
                                         
                 </div>
-                }           
-                
-                           
-                
-                
+                }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

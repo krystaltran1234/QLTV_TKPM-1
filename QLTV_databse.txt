@@ -14,7 +14,7 @@ create table Sach (
 	NamXb INT NOT NULL,
 	NhaXb nvarchar(255) NOT NULL,
 	Ngaynhap Date not null,
-	TinhTrang varchar(255) NOT NULL default 'Chua Muon',
+	TinhTrang nvarchar(255) default 'Chưa mượn',	
 	Daxoa bit default 0,
 	primary key (Id),
 	foreign key (Theloaisach) references Theloaisach(Id)
@@ -70,6 +70,11 @@ create table Tuoidocgia(
 	Id INT primary key NOT NULL IDENTITY(1,1),
 	Tuoimin INT NOT NULL,
 	Tuoimax INT NOT NULL,
+	Daxoa bit default 0
+)
+create table Namxuatban(
+	Id INT primary key NOT NULL IDENTITY(1,1),
+	Namxuatbang INT NOT NULL,
 	Daxoa bit default 0
 )
 

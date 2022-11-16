@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using QLTV_TKPM.Data;
 using QLTV_TKPM.Models;
 
-namespace QLTV_TKPM.Pages.Docgias
+namespace QLTV_TKPM.Pages.Namxuatbans
 {
     public class DetailsModel : PageModel
     {
@@ -18,30 +18,24 @@ namespace QLTV_TKPM.Pages.Docgias
         {
             _context = context;
         }
-        public Loaidocgia Loaidocgia { get; set; } = default!;
 
-        public Docgia Docgia { get; set; }
-        
+      public Namxuatban Namxuatban { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Docgia == null)
+            if (id == null || _context.Namxuatban == null)
             {
                 return NotFound();
             }
 
-            var docgia = await _context.Docgia.FirstOrDefaultAsync(m => m.Id == id);
-            if (docgia == null)
+            var namxuatban = await _context.Namxuatban.FirstOrDefaultAsync(m => m.Id == id);
+            if (namxuatban == null)
             {
                 return NotFound();
             }
             else 
             {
-                Docgia = docgia;
-                if (_context.Loaidocgia != null)
-                {
-                    Loaidocgia = await _context.Loaidocgia.FirstOrDefaultAsync(m => m.Id == Docgia.LoaiDocGia);
-                }
+                Namxuatban = namxuatban;
             }
             return Page();
         }

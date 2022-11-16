@@ -25,6 +25,9 @@ namespace QLTV_TKPM.Pages.Docgias
 
         public IList<Loaidocgia> Loaidocgia { get; set; } = default!;
 
+        public Tuoidocgia tuoidocgia { get; set; }
+        public string errorMessage { get; set; } = "";
+
         public async Task<IActionResult> OnGetAsync()
         {
             Docgia = new Docgia();
@@ -35,6 +38,7 @@ namespace QLTV_TKPM.Pages.Docgias
             {
                 Loaidocgia = await _context.Loaidocgia.ToListAsync();
             }
+               
             return Page();
         }
         
@@ -47,6 +51,23 @@ namespace QLTV_TKPM.Pages.Docgias
           if (!ModelState.IsValid)
             {
                 return Page();
+            }
+            if (_context.Tuoidocgia != null)
+            {
+                var tuoidocgias = await _context.Tuoidocgia.ToListAsync();
+                if (tuoidocgias.Count > 0)
+                {
+                    int tuoiMin = tuoidocgias[0].TuoiMin;
+                    int tuoiMax = tuoidocgias[0].TuoiMax;
+                    DateTime year = Docgia.Ngaysinh;
+                    int tuoihientai = year.Year - DateTime.Today.Year;
+                    if(tuoihientai < tuoidocgias[0].TuoiMin || tuoihientai > tuoidocgias[0].TuoiMax)
+                    {
+                        errorMessage = "Tuổi của bạn quá tuổi quy định";
+                        return Page();
+                    }    
+                }
+
             }
 
             _context.Docgia.Add(Docgia);

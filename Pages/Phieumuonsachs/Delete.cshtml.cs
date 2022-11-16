@@ -20,9 +20,13 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
         }
 
         [BindProperty]
+        
         public IList<Phieumuonchitiet> Phieumuonchitiets { get; set; }
         [BindProperty]
-        public  Phieumuonsach Phieumuonsachs { get; set; }
+        public Phieumuonsach Phieumuonsachs { get; set; }
+        public Docgia docgias { get; set; }
+        public IList<Sach> saches { get; set; }
+        public IList<Theloaisach> theloaisaches { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -40,12 +44,33 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
             else 
             {
                 Phieumuonsachs = phieumuonsach;
+                if (_context.Docgia != null)
+                {
+                    var _docgia = await _context.Docgia.FirstOrDefaultAsync(m => m.Id == Phieumuonsachs.MaDocGia);
+                    if (_docgia != null)
+                    {
+                        docgias = _docgia;
+                    }
+
+                }
             }
 
             var phieumuonchitiet = await _context.Phieumuonchitiet.Where(m => m.Maphieumuonsach == phieumuonsach.Id).ToListAsync();
             if (phieumuonchitiet != null)
             {
                 Phieumuonchitiets = phieumuonchitiet;
+                if (_context.Sach != null)
+                {
+                    var _sach = await _context.Sach.ToListAsync();
+                    if (_sach != null)
+                    {
+                        saches = _sach;
+                        if (_context.Theloaisach != null)
+                        {
+                            theloaisaches = await _context.Theloaisach.ToListAsync();
+                        }
+                    }
+                }
             }
             return Page();
         }
@@ -60,9 +85,20 @@ namespace QLTV_TKPM.Pages.Phieumuonsachs
 
             if (phieumuonsach != null)
             {
+                if (_context.Phieumuonchitiet != null)
+                {
+                    for (int i = 0; i < Phieumuonchitiets.Count; i++)
+                    {
+                        _context.Phieumuonchitiet.Remove(Phieumuonchitiets[i]);
+                        await _context.SaveChangesAsync();
+
+                    }
+                }
                 Phieumuonsachs = phieumuonsach;
+                
                 _context.Phieumuonsach.Remove(Phieumuonsachs);
                 await _context.SaveChangesAsync();
+                   
             }
 
             return RedirectToPage("./Index");
